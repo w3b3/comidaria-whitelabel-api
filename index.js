@@ -5,7 +5,11 @@ require('dotenv').config(); // Step 1: Require dotenv package to load environmen
 const app = express();
 const port = 3000; // You can change this port if needed
 
-app.use(cors()); // Step 3: Use the cors middleware
+app.use(cors(
+  {
+    origin: 'https://emitajuba.com.br'
+  },
+)); // Step 3: Use the cors middleware
 
 async function createAstraClient() {
   const astraClient = await createClient({
