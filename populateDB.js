@@ -77,10 +77,10 @@ const restaurant_menu = [
 
 const restaurants = [
     {
-        name: 'McDonalds',
-        location: 'USA',
-        rating: 4.5,
-        image: 'exported_images/mcdonalds.jpg',
+        name: 'Bobs Burgers',
+        location: 'BRA',
+        rating: 3.5,
+        image: 'exported_images/bobs.jpg',
         menu: restaurant_menu
     },
 ];
