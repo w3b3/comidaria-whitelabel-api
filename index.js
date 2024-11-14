@@ -3,7 +3,7 @@ const cors = require('cors'); // Step 2: Require the cors package
 const { createClient } = require('@astrajs/collections'); // Step 1: Require the Astra DB client
 require('dotenv').config(); // Step 1: Require dotenv package to load environment variables
 const app = express();
-const port = 3000; // You can change this port if needed
+const port = 3001; // You can change this port if needed
 
 // app.use(cors({
   // origin: ['https://emitajuba.com.br', 'http://localhost:3000']
@@ -26,7 +26,7 @@ createAstraClient().then((astraClient) => {
   const collection = astraClient.namespace('bar').collection('restaurants');
 
   // GET endpoint to return the JSON data
-  app.get('/data/:restaurant_name', async (req, res) => {
+  app.get('/data/restaurants/:restaurant_name', async (req, res) => {
     try {
       const restaurantName = req.params.restaurant_name;
       const { data } = await collection.find({});
@@ -45,7 +45,8 @@ createAstraClient().then((astraClient) => {
     try {
       const { data } = await collection.find({});
       const restaurantNames = Object.keys(data);
-      res.json(restaurantNames);
+      // res.json({});
+	    res.json(restaurantNames);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch data from Astra DB' });
     }
