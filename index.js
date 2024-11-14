@@ -21,11 +21,26 @@ createAstraClient().then((astraClient) => {
   const collection = astraClient.namespace('bar').collection('restaurants');
 
   // GET endpoint to return the JSON data
-  app.get('/data', async (req, res) => {
+  app.get('/data/:restaurant_name', async (req, res) => {
     try {
-      const {data} = await collection.find({});
-      res.json(data["McDonalds"].menu);
-    //   res.json(data);
+      const restaurantName = req.params.restaurant_name;
+      const { data } = await collection.find({});
+      if (data[restaurantName]) {
+        res.json(data[restaurantName].menu);
+      } else {
+        res.status(404).json({ error: 'Restaurant not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch data from Astra DB' });
+    }
+  });
+
+  // GET endpoint to list all restaurants
+  app.get('/restaurants', async (req, res) => {
+    try {
+      const { data } = await collection.find({});
+      const restaurantNames = Object.keys(data);
+      res.json(restaurantNames);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch data from Astra DB' });
     }
