@@ -5,11 +5,12 @@ require('dotenv').config(); // Step 1: Require dotenv package to load environmen
 const app = express();
 const port = 3000; // You can change this port if needed
 
-app.use(cors(
-  {
-    origin: 'https://emitajuba.com.br'
-  },
-)); // Step 3: Use the cors middleware
+// app.use(cors({
+  // origin: ['https://emitajuba.com.br', 'http://localhost:3000']
+// })); // Step 3: Use the cors middleware
+
+app.use(cors()); // Step 3: Use the cors middleware
+
 
 async function createAstraClient() {
   const astraClient = await createClient({
@@ -40,7 +41,7 @@ createAstraClient().then((astraClient) => {
   });
 
   // GET endpoint to list all restaurants
-  app.get('/restaurants', async (req, res) => {
+  app.get('/data/restaurants', async (req, res) => {
     try {
       const { data } = await collection.find({});
       const restaurantNames = Object.keys(data);
