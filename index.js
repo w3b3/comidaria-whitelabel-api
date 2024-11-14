@@ -7,25 +7,34 @@ const port = 3000; // You can change this port if needed
 
 app.use(cors()); // Step 3: Use the cors middleware
 
-const astraClient = await createClient({
-  astraDatabaseId: process.env.ASTRA_DATABASE_ID,
-  astraDatabaseRegion: process.env.ASTRA_DATABASE_REGION,
-  applicationToken: process.env.ASTRA_APPLICATION_TOKEN,
-});
+async function createAstraClient() {
+  const astraClient = await createClient({
+    astraDatabaseId: process.env.ASTRA_DATABASE_ID,
+    astraDatabaseRegion: process.env.ASTRA_DATABASE_REGION,
+    applicationToken: process.env.ASTRA_APPLICATION_TOKEN,
+  });
 
-const collection = astraClient.namespace('bar').collection('restaurant_menu');
+  return astraClient;
+}
 
-// GET endpoint to return the JSON data
-app.get('/data', async (req, res) => {
-  try {
-    const data = await collection.find({});
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data from Astra DB' });
-  }
-});
+createAstraClient().then((astraClient) => {
+  const collection = astraClient.namespace('bar').collection('restaurants');
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  // GET endpoint to return the JSON data
+  app.get('/data', async (req, res) => {
+    try {
+      const {data} = await collection.find({});
+      res.json(data["McDonalds"].menu);
+    //   res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch data from Astra DB' });
+    }
+  });
+
+  // Start the server
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+}).catch((error) => {
+  console.error('Failed to create Astra DB client:', error);
 });

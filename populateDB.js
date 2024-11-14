@@ -2,7 +2,7 @@
 const { createClient } = require('@astrajs/collections');
 require('dotenv').config();
 
-const myData = [
+const restaurant_menu = [
     {
         name: 'Burger',
         description: 'A delicious beef burger',
@@ -75,6 +75,16 @@ const myData = [
     },
 ];
 
+const restaurants = [
+    {
+        name: 'McDonalds',
+        location: 'USA',
+        rating: 4.5,
+        image: 'exported_images/mcdonalds.jpg',
+        menu: restaurant_menu
+    },
+];
+
 async function populateDB() {
     const astraClient = await createClient({
         astraDatabaseId: process.env.ASTRA_DATABASE_ID,
@@ -82,9 +92,9 @@ async function populateDB() {
         applicationToken: process.env.ASTRA_APPLICATION_TOKEN,
     });
 
-    const collection = astraClient.namespace('bar').collection('restaurant_menu');
+    const collection = astraClient.namespace('bar').collection('restaurants');
 
-    for (const item of myData) {
+    for (const item of restaurants) {
         await collection.create(item.name, item);
     }
 
